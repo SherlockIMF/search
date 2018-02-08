@@ -20,22 +20,30 @@ In order to deploy this project into a server you need 3 components installed on
 3- virtualenv
 
 On a linux machine use the following commands to install these components:
+
+```
 sudo apt-get update
 sudo apt-get install python-pip python-dev nginx
 sudo pip install virtualenv
+```
 
 # Create a Python Virtual Environment
 
+```
 virtualenv flask
 source flask/bin/activate
 pip install -r requirements.txt
-
+```
 
 # Setup reverse lookup
+
+```
 sudo vi /etc/nginx/sites-available/sherlock_at_imf
+```
 
 copy paste the following code into the file:
 
+```
 server {
     location / {
         proxy_pass http://localhost:8000;
@@ -46,6 +54,7 @@ server {
         alias  {{deployment path}}/search/static/;
     }
 }
+```
 
 replace the {{deployment path}} with the address of the folder you cloned the repository into
 
