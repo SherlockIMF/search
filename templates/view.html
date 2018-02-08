@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<style>
+    body {
+        font-family: "Helvetica Neue", Helvetica, sans-serif;
+        font-size: 10px;
+    }
+         
+</style>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!-- <meta http-equiv="refresh" content="5"> -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" />    
+    <link href="/static/css/search.css" rel="stylesheet" />    
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>    
+  <script src="/static/js/d3.v4.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Sherlock at IMF</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/search/">Advanced Search</a>
+                    </li>
+                    <li>
+                        <a href="/similarity/">Search Embeddings</a>
+                    </li>
+                    <li>
+                        <a href="/embeddings-sense-cbow/">Visualize Embeddings</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <form class="navbar-form" action="/search/" method="POST" role="search" >
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Quick Search" name="textinput">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                    </form>
+                </ul>                
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+<div class="container">
+<div class="bar">
+  <div class="row">
+   <object data="/static/pdfs/{{ document.FileName }}" type="application/pdf" width="100%" height="500px"> 
+   <p>It appears you don't have a PDF plugin for this browser.
+   No biggie... you can <a href="/static/pdfs/{{ document.FileName }}">click here to
+  download the PDF file.</a></p>  
+  </object>  
+  <div class="jumbotron">
+  <h2>
+  <a href="{{ document.FullTextURL }}">{{ document.title | safe() }}</a>
+  </h2>
+  <h4>Authors: <i>{{ document.Authors | safe() }}</i></h4>
+  <table style="width: 100%;"  cellpadding="10">
+  <tbody>
+  <tr>
+  <td><h4>Publication Year: <i>{{ document.issue | int }}</i></h4></td>
+  <td><h4>Publication Series: <i>{{ document['Publication Series'] | safe() }}</i></h4></td>
+  </tr>
+  <tr>
+  <td><h4>DOCNO: <i>{{ document.DOCNO | safe() }}</i></h4></td>
+  <td><h4>System Key: <i>{{ document.systemkey | safe() }}</i></h4></td>
+  </tr>
+  <tr>
+  <td><h4>Subject(s): <i>{{ document.subject | safe() }}</i></h4></td>
+  <td><h4>Countries: <i>{{ document['Country ISO Codes'] | safe() }}</i></h4></td>    
+  </tr>
+  </tbody>
+  </table>
+  <h4>Summary:</h4>
+  <p>{{ document.summary | safe() }}</p>
+  </div>
+
+  <h2>Similar Papers:</h2>
+    <table class="table table-hover">
+      <tbody id="myTable">
+        {% for ix, row in similar[1:].iterrows() %}
+        <tr>
+        <td>
+        <a href="/view-doc/?id={{ row['ID'] | int }}" target="_blank"><h3>{{ row.title }}</h3></a>
+        <strong><i>
+            {% for a in row.Authors.split(';') %}
+            <a href="/view-expert/?id={{ a.strip() | safe() }}" target="_blank">{{ a.strip() | safe() }}</a>
+            ;
+            {% endfor %}
+        </i></strong>
+        <br>
+        <strong>Publication Year: <i>{{ row.issue | int }}</i></strong>  
+        <p><strong>Summary:</strong>
+        {{ row.summary | safe() }}
+        <br>
+        <strong>Score:
+        {{ row.Score | safe() }}</strong></p>
+        </td>         
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+</body>
+</html>

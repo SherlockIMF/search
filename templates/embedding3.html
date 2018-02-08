@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    body {
+        font-family: "Helvetica Neue", Helvetica, sans-serif;
+        font-size: 10px;
+    }
+         
+</style>
+<body>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!-- <meta http-equiv="refresh" content="5"> -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" />    
+    <link href="/static/css/search.css" rel="stylesheet" />    
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>    
+  <script src="/static/js/d3.v4.min.js"></script>
+</head>
+<script>
+
+var data = d3.csv("/static/data/sense_tsne_cbow.csv", function(error, data) {
+          if (error) throw error;
+          
+          data.forEach(function(d) {
+            d.x = +d.X;
+            d.y = +d.Y;
+            d.label = d.Word.split('|')[0];
+            d.type = d.Word.split('|')[1];
+          });
+
+          var margin = {top: 20, right: 20, bottom: 30, left: 50},
+              width = 1280 - margin.left - margin.right,
+              height = 1000 - margin.top - margin.bottom;
+
+          var svg = d3.select("body").append("svg")
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+              .attr("transform",
+                    "translate(" + margin.left + "," + margin.top + ")");
+
+          // var div = d3.select("body").append("div")
+          //     .attr("class", "tooltip")
+          //     .style("opacity", 0);
+
+
+          var x = d3.scaleLinear()          
+                .range([0, width])
+                .nice();
+
+          var y = d3.scaleLinear()
+              .range([height, 0]);  
+
+          x.domain(d3.extent(data, function(d) { return d.x; }));
+          y.domain(d3.extent(data, function(d) { return d.y; }));
+
+
+          var cValue = function(d) { return d.type;},
+              color = d3.scaleOrdinal(d3.schemeCategory10);      
+
+
+          svg.append("rect")
+              .attr("width", width)
+              .attr("height", height)
+              .style("fill", "none")
+              .style("pointer-events", "all")
+              .call(d3.zoom()
+                  .scaleExtent([1/20, 50])
+                  .on("zoom", zoomed));               
+
+          var circle = svg.selectAll("circle")
+              .data(data)
+            .enter().append("circle")
+              .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; })
+              .attr("r", 5)
+              .attr("opacity", 0.3)
+              .style("fill", function(d) { return color(cValue(d)); });
+          
+          var texts = svg.selectAll("dot")
+              .data(data)
+            .enter().append("text")
+              .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; })
+              .attr("dx", ".71em")
+              .attr("dy", ".35em")
+              .attr("opacity", 0.5)
+
+          function zoomed(e) {
+            var transform = d3.event.transform;
+            circle.attr("transform", function(d) {
+              return "translate(" + transform.applyX(x(d.x)) + "," + transform.applyY(y(d.y)) + ")";
+            });
+            texts.attr("transform", function(d) {
+              return "translate(" + transform.applyX(x(d.x)) + "," + transform.applyY(y(d.y)) + ")";
+            });
+            if(transform.k > 5){
+              texts.text(function(d) { return d.label;});
+            } else {
+              texts.text(function(d) { return;});
+            }
+          }
+
+});
+</script>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Sherlock at IMF</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/search/">Full-Text Search</a>
+                    </li>
+                    <li>
+                        <a href="/similarity/">Search Embeddings</a>
+                    </li>
+                    <li>
+                        <a href="/embeddings-sense-cbow/">Visualize Embeddings</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+</body>

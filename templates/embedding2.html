@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+    body {
+        font-family: "Helvetica Neue", Helvetica, sans-serif;
+        font-size: 10px;
+    }
+         
+</style>
+<body>
+<script src="/static/js/d3.v4.min.js"></script>
+<script>
+
+var data = d3.csv("/static/data/sense_tsne.csv", function(error, data) {
+          if (error) throw error;
+          
+          data.forEach(function(d) {
+            d.x = +d.X;
+            d.y = +d.Y;
+            d.label = d.Word.split('|')[0];
+            d.type = d.Word.split('|')[1];
+          });
+
+          var margin = {top: 20, right: 20, bottom: 30, left: 50},
+              width = 1280 - margin.left - margin.right,
+              height = 1000 - margin.top - margin.bottom;
+
+          var svg = d3.select("body").append("svg")
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+              .attr("transform",
+                    "translate(" + margin.left + "," + margin.top + ")");
+
+          // var div = d3.select("body").append("div")
+          //     .attr("class", "tooltip")
+          //     .style("opacity", 0);
+
+
+          var x = d3.scaleLinear()          
+                .range([0, width])
+                .nice();
+
+          var y = d3.scaleLinear()
+              .range([height, 0]);  
+
+          x.domain(d3.extent(data, function(d) { return d.x; }));
+          y.domain(d3.extent(data, function(d) { return d.y; }));
+
+
+          var cValue = function(d) { return d.type;},
+              color = d3.scaleOrdinal(d3.schemeCategory10);      
+
+
+          svg.append("rect")
+              .attr("width", width)
+              .attr("height", height)
+              .style("fill", "none")
+              .style("pointer-events", "all")
+              .call(d3.zoom()
+                  .scaleExtent([1/20, 50])
+                  .on("zoom", zoomed));               
+
+          var circle = svg.selectAll("circle")
+              .data(data)
+            .enter().append("circle")
+              .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; })
+              .attr("r", 5)
+              .attr("opacity", 0.3)
+              .style("fill", function(d) { return color(cValue(d)); });
+          
+          var texts = svg.selectAll("dot")
+              .data(data)
+            .enter().append("text")
+              .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; })
+              .attr("dx", ".71em")
+              .attr("dy", ".35em")
+              .attr("opacity", 0.5)
+
+          function zoomed(e) {
+            var transform = d3.event.transform;
+            circle.attr("transform", function(d) {
+              return "translate(" + transform.applyX(x(d.x)) + "," + transform.applyY(y(d.y)) + ")";
+            });
+            texts.attr("transform", function(d) {
+              return "translate(" + transform.applyX(x(d.x)) + "," + transform.applyY(y(d.y)) + ")";
+            });
+            if(transform.k > 5){
+              texts.text(function(d) { return d.label;});
+            } else {
+              texts.text(function(d) { return;});
+            }
+          }
+
+});
+</script>
+</body>

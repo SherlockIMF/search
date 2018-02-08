@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
+    <meta name="robots" content="noindex">
+
+    <title>Word Embeddings Learned on IMP Working Papers</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="/static/css/custom.css" rel="stylesheet" id="bootstrap-css">
+    <style type="text/css">
+        @media screen and (min-width: 768px) {
+            #adv-search {
+                width: 500px;
+                margin: 0 auto;
+            }
+            .dropdown.dropdown-lg {
+                position: static !important;
+            }
+            .dropdown.dropdown-lg .dropdown-menu {
+                min-width: 500px;
+            }
+        }
+    </style>
+    <script src="/static/js/jquery-1.10.2.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Sherlock at IMF</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/search/">Full-Text Search</a>
+                    </li>
+                    <li>
+                        <a href="/similarity/">Search Embeddings</a>
+                    </li>
+                    <li>
+                        <a href="/embeddings-sense-cbow/">Visualize Embeddings</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+    <div class="container">
+        <div class="bar">
+        <div class="row">    
+            <h1 class="text-center">Word Embeddings Learned on</h1>
+            <h1 class="text-center">IMF Working Papers (2000-2016)</h1>
+            <br>
+            <div class="col-xs-8 col-xs-offset-2">
+                <div class="input-group">
+                    <div class="input-group-btn search-panel">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <span id="search_concept">Choose Embedding</span> <span class="caret"></span>
+                        </button>
+                        <ul id="model" class="dropdown-menu" role="menu">
+                          <li><a href="#skip,w=3,e=128">IMF2Vec Skip-Gram (dimensions=128, window=3)</a></li>
+                          <li><a href="#cbow,w=3,e=128">IMF2Vec CBOW (dimensions=128, window=3)</a></li>
+                          <li><a href="#skip,w=5,e=300">IMF2Vec Skip-Gram (dimensions=300, window=5)</a></li>
+                          <li><a href="#skip,w=5,e=300">IMF2Vec CBOW (dimensions=300, window=5)</a></li>
+                          <li><a href="#sense2vecskip,w=3,e=128">Sense2Vec Skip-Gram(dimensions=128, window=3)</a></li>
+                          <li><a href="#sense2vecskip,w=5,e=300">Sense2Vec Skip-Gram(dimensions=300, window=5)</a></li>
+                          <li><a href="#sense2veccbow,w=3,e=128">Sense2Vec CBOW(dimensions=128, window=3)</a></li>
+                          <li><a href="#sense2veccbow,w=5,e=300">Sense2Vec CBOW(dimensions=300, window=5)</a></li>
+                          <li class="divider"></li>
+                          <li><a href="#">Glove Intersect</a></li>
+                          <li><a href="#">GoogleNews Intersect</a></li>
+                        </ul>
+                    </div>
+                    <input type="text" class="form-control" id="word" placeholder="Enter a word of interest to see the most similar words ..." >
+                    <span class="input-group-btn">
+                        <select id="topn" class="form-control">
+                            <option value="5" selected="selected">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                        </select>                     
+                        <button id="search" class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                    </span>
+                </div>
+                <span id="alert" class="help-block">Word is not in the vocabulary!</span>
+            </div>
+        </div>
+    </div>
+    </div>
+
+<script src="/static/js/d3.js"></script>
+<script src="/static/js/demo.js"></script>
+
+</body></html>
