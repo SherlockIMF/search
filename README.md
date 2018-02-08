@@ -4,13 +4,13 @@ This project is a web-based system that creates index and search capabilities fo
 
 # Downloads
 
-1- [Dataframe](www.sherlockatimf.org/static/scraped_meta_join_updated.pickle) containing text and metadata for the working papers.
+1- [Dataframe](http://www.sherlockatimf.org/static/scraped_meta_join_updated.pickle) containing text and metadata for the working papers.
 download and copy the file "scraped_meta_join_updated.pickle" into the root folder next to app.py
 
-2- The index folder to enable search and retrieval.
+2- The [index](http://www.sherlockatimf.org/static/index.tar.gz) folder to enable search and retrieval.
 download the file index.zip and extract the contents into the folder "index" into the root folder next to app.py
 
-3- pdfs folder that contains all of the pdf files. 
+3- The [pdfs](http://www.sherlockatimf.org/static/pdfs.zip) folder that contains all of the pdf files. 
 download the file pdfs.zip and extract the contents into the folder "pdfs" into the "static" folder.
 
 # Deployment
