@@ -4,7 +4,7 @@ This project is a web-based system that creates index and search capabilities fo
 
 # Downloads
 
-1- Dataframe containing text and metadata for the working papers.
+1- [Dataframe](www.sherlockatimf.org/static/scraped_meta_join_updated.pickle) containing text and metadata for the working papers.
 download and copy the file "scraped_meta_join_updated.pickle" into the root folder next to app.py
 
 2- The index folder to enable search and retrieval.
