@@ -62,8 +62,9 @@ replace the {{deployment path}} with the address of the folder you cloned the re
 
 Use the following command to run the server:
 
+```
 gunicorn app:app -b localhost:8000 --daemon
-
+```
 
 
 
